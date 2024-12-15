@@ -1,0 +1,251 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Edit
+{% endblock %}
+
+{% block main %}
+    <div class="container">
+        <form id="delete_flashcard" action="{{ url_for('delete_flashcard') }}" method="post"></form>
+        <form action="{{ url_for('edit', username=username, deck_name=deck_name) }}" method="post">
+            <div class="container">
+                <div class="left-right">
+                    <h1 class="py-4">Edit <span class="deck-name">{{ deck_name }}</span></h1>
+                    <button id="save-btn" type="submit" class="mb-2 save button">Save</button>
+                </div>
+                <input class="mb-2 form-control" autocomplete="off" type="text" required name="name" placeholder="Name" value="{{ deck_name }}">
+                <input type="hidden" name="initial_description" value="{{ description }}">
+                <textarea class="mb-2 form-control" autocomplete="off" type="text" name="description" placeholder="Description (Optional)" rows="3">{{ description }}</textarea>
+                <input hidden id="nrOfNewFlashcards" name="nrOfNewFlashcards" value="0">
+                <p><strong>Notes:</strong></p>
+                <ul>
+                    <li>The Deck must have a unique name.</li>
+                    <li>The Deck must have at least 1 Flashcard.</li>
+                    <li>Every Flashcard must have a Front and a Back.</li>
+                </ul>
+            </div>
+            <div id="flashcard-container">
+                {% set rowId = [] %}
+                {% for id, front, back in flashcards %}
+                    {% if loop.index0 % 2 == 0 %}
+                        <div class="container py-2" id="container_{{ rowId|length + 1 }}">
+                            <div class="row" id="row_{{ rowId|length + 1 }}">
+                    {% endif %}
+                    <div class="col-md">
+                        <div class="flashcard0 text-center" data-flashcard-id="{{ id }}">
+                            <input type="hidden" name="initial_front_{{ id }}" value="{{ front }}">
+                            <label for="front_{{ id }}">Front</label>
+                            <textarea class="mb-2 form-control" autocomplete="off" type="text" id="front_{{ id }}" name="front_{{ id }}" placeholder="Front" rows="3">{{ front }}</textarea>
+                            <input type="hidden" name="initial_back_{{ id }}" value="{{ back }}">
+                            <label for="back_{{ id }}">Back</label>
+                            <textarea class="mb-2 form-control" autocomplete="off" type="text" id="back_{{ id }}" name="back_{{ id }}" placeholder="Back" rows="4">{{ back }}</textarea>
+                            <button id="delete_{{ id }}" type="button" class="button delete small-button" onclick="openConfirmation(this.id)">
+                                <i class="fa-solid fa-trash mb-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                    {% if loop.index0 % 2 == 1 or loop.last %}
+                            </div>
+                        </div>
+                        {% if rowId.append(1) %}
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <dialog class="confirmation text-center">
+                <p>Are you sure you want to delete this flashcard?</p>
+                <button type="button" class="button" onclick="closeConfirmation()">Close</button>
+                <input type="hidden" form="delete_flashcard" name="confirmation">
+                <button type="submit" class="button delete" form="delete_flashcard">Delete</button>
+            </dialog>
+            <dialog class="confirmationForNewFlashcard text-center">
+                <p>Are you sure you want to delete this flashcard?</p>
+                <button type="button" class="button" onclick="closeConfirmationForNewFlashcard()">Close</button>
+                <button id="deleteNewFlashcard" type="button" class="button delete">Delete</button>
+            </dialog>
+            <div class="mb-3 container text-center">
+                <button id="addFlashcard" type="button" class="button create"><h1>+</h1></button>
+            </div>
+        </form>
+    </div>
+    <script>
+        // Displays confirmation dialog for deletion of a flashcard saved in the database
+        function openConfirmation(flashcardId) {
+            const confirmation = document.querySelector('.confirmation'); 
+            let id = flashcardId;
+            id = id.split("_")[1];
+            document.querySelector('.confirmation input[name="confirmation"]').value = id; 
+            confirmation.showModal();
+        }
+
+        // Closes confirmation dialog for a flashcard saved in the database
+        function closeConfirmation() {
+            const confirmation = document.querySelector('.confirmation');
+            confirmation.close();
+        }
+
+        // Displays confirmation dialog for deletion of a flashcard that is not saved in the database and removes it from DOM
+        function openConfirmationForNewFlashcard(flashcardId, nrOfRows) {
+            const newConfirmation = document.querySelector('.confirmationForNewFlashcard');
+            newConfirmation.showModal();
+
+            const deleteButton = document.getElementById('deleteNewFlashcard');
+            deleteButton.onclick = () => {
+                const id = flashcardId.split("_")[2];
+                const flashcard = document.getElementById(`new_flashcard_${id}`);
+                const row = document.getElementById(`row_${nrOfRows}`);
+
+                if (flashcard) {
+                    flashcard.remove();
+                }
+
+                if (row && row.querySelectorAll('.col-md').length === 0) {
+                    row.parentElement.remove();
+                }
+
+                nrOfNewFlashcards--;
+                nrOfNewFlashcardsElem.setAttribute('value', nrOfNewFlashcards);
+                updateFlashcards();
+                newConfirmation.close();
+            };
+        }
+
+        // Closes confirmation dialog for a flashcard that is not saved in the database
+        function closeConfirmationForNewFlashcard() {
+            const newConfirmation = document.querySelector('.confirmationForNewFlashcard');
+            newConfirmation.close();
+        }
+        
+        // Closes confirmation dialog when clicking outside it
+        const confirmation = document.querySelector('.confirmation');
+        const newConfirmation = document.querySelector('.confirmationForNewFlashcard'); 
+        addEventListener('click', (event) => { 
+            if (event.target == confirmation) { 
+                confirmation.close(); 
+            } 
+            else if (event.target == newConfirmation) {
+                newConfirmation.close();
+            }
+        });
+
+        let nrOfNewFlashcards = 0;
+        let nrOfFlashcards = document.querySelectorAll('.flashcard0').length;
+        let nrOfRows = Math.ceil(nrOfFlashcards / 2);
+        const nrOfNewFlashcardsElem = document.querySelector('#nrOfNewFlashcards');
+        const addFlashcardButton = document.getElementById('addFlashcard');
+
+        addFlashcardButton.addEventListener("click", () => {
+            addFlashcard();
+        });
+
+        // Updates rows so each row contains no more than 2 flashcards and redistributes ids for them correctly
+        function updateFlashcards() {
+            const container = document.getElementById('flashcard-container');
+
+            const rows = Array.from(container.querySelectorAll('.row'));
+            const allNewFlashcards = Array.from(container.querySelectorAll('.new-flashcard'));
+            let currentNrOfRows = Math.ceil((container.querySelectorAll('.col-md').length - allNewFlashcards.length) / 2);
+
+            rows.forEach(row => {
+                const newFlashcards = row.querySelectorAll('.new-flashcard');
+                newFlashcards.forEach(flashcard => row.removeChild(flashcard));
+
+                const remainingFlashcards = row.querySelectorAll('.col-md').length;
+                if (remainingFlashcards === 0) {
+                    row.parentElement.remove();
+                }
+            });
+
+            allNewFlashcards.forEach((flashcard, index) => {
+                let row = container.querySelector(`#row_${currentNrOfRows}`);
+                const existingFlashcards = row ? row.querySelectorAll('.col-md:not(.new-flashcard)').length : 0;
+
+                if (!row || (existingFlashcards + row.querySelectorAll('.new-flashcard').length) >= 2) {
+                    currentNrOfRows++;
+                    createRow(currentNrOfRows);
+                    row = container.querySelector(`#row_${currentNrOfRows}`);
+                }
+
+                row.appendChild(flashcard);
+
+                const flashcardId = index + 1;
+                flashcard.id = `new_flashcard_${flashcardId}`;
+                const frontLabel = flashcard.querySelector('label[for^="new_front_"]');
+                const front = flashcard.querySelector('textarea[name^="new_front_"]');
+                const backLabel = flashcard.querySelector('label[for^="new_back_"]');
+                const back = flashcard.querySelector('textarea[name^="new_back_"]');
+                const deleteButton = flashcard.querySelector('button[id^="new_delete_"]');
+
+                if (frontLabel) {
+                    frontLabel.setAttribute('for', `new_front_${flashcardId}`);
+                }
+                if (front) {
+                    front.name = front.id = `new_front_${flashcardId}`;
+                }
+                if (backLabel) {
+                    backLabel.setAttribute('for', `new_back_${flashcardId}`);
+                }
+                if (back) {
+                    back.name = back.id = `new_back_${flashcardId}`;
+                }
+                if (deleteButton) {
+                    deleteButton.id = `new_delete_${flashcardId}`;
+                    deleteButton.setAttribute('onclick', `openConfirmationForNewFlashcard(this.id, 'row_${currentNrOfRows}')`);
+                }
+            });
+
+            const containers = container.querySelectorAll('.container');
+            containers.forEach(container => {
+                const row = container.querySelector('.row');
+                if (!row || row.children.length === 0) {
+                    container.remove();
+                }
+            });
+
+            nrOfRows = currentNrOfRows;
+            nrOfNewFlashcards = allNewFlashcards.length;
+            nrOfNewFlashcardsElem.setAttribute('value', nrOfNewFlashcards);
+        }
+
+        // Creates a row and container for it
+        function createRow(nrOfRows) {
+            const container = document.getElementById('flashcard-container');
+            container.insertAdjacentHTML('beforeend', `<div class="container py-2" id="container_${nrOfRows}">
+                                                            <div class="row" id="row_${nrOfRows}"></div>
+                                                    </div>`);
+        }
+
+        // Generates the HTML for creating a flashcard
+        function createFlashcardHTML(nrOfNewFlashcards, nrOfRows) {
+            return `<div class="col-md new-flashcard" id="new_flashcard_${nrOfNewFlashcards}">
+                        <div class="flashcard0 text-center">
+                            <label for="new_front_${nrOfNewFlashcards}">Front</label>
+                            <textarea class="mb-2 form-control" autocomplete="off" type="text" id="new_front_${nrOfNewFlashcards}" name="new_front_${nrOfNewFlashcards}" placeholder="Front" rows="3"></textarea>
+                            <label for="new_back_${nrOfNewFlashcards}">Back</label>
+                            <textarea class="mb-2 form-control" autocomplete="off" type="text" id="new_back_${nrOfNewFlashcards}" name="new_back_${nrOfNewFlashcards}" placeholder="Back" rows="4"></textarea>
+                            <button id="new_delete_${nrOfNewFlashcards}" type="button" class="button delete small-button" onclick="openConfirmationForNewFlashcard(this.id, '${nrOfRows}')">
+                                <i class="fa-solid fa-trash mb-2"></i>
+                            </button>
+                        </div>
+                    </div>`;
+        }
+
+        // Finds a row with less then 2 flashcards and adds a flashcard there
+        function addFlashcard() {
+            let row = document.getElementById(`row_${nrOfRows}`);
+            let flashcardsInRow = row ? row.querySelectorAll('.col-md').length : 0;
+            nrOfNewFlashcards++;
+            nrOfNewFlashcardsElem.setAttribute('value', nrOfNewFlashcards);
+
+            if (!row || flashcardsInRow >= 2) {
+                nrOfRows++;
+                createRow(nrOfRows);
+                row = document.getElementById(`row_${nrOfRows}`);
+                console.log(`New Row Created: row_${nrOfRows}`);
+            }
+
+            const flashcardHTML = createFlashcardHTML(nrOfNewFlashcards, nrOfRows);
+            row.insertAdjacentHTML('beforeend', flashcardHTML);
+        }
+    </script>
+{% endblock %}

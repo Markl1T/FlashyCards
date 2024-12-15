@@ -1,0 +1,92 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    {{ deck_name }}
+{% endblock %}
+
+{% block main %}
+    <div class="container">
+        <h1 class="text-center pt-4">{{ deck_name }}</h1>
+        <h5 class="text-center">{{ description }}</h5>
+        <button id="share-button" class="button">
+            <i class="fa fa-copy"></i> Share the Deck
+        </button>
+    </div>
+    {% for front, back in flashcards %}
+        {% if loop.index0 % 2 == 0 %}
+            <div class="container">
+                <div class="row">
+        {% endif %}
+        <div class="col-md text-center">
+            <div class="flashcard">
+                <div class="front">
+                    <h5>{{ front }}</h5>
+                </div>
+                <div class="back">
+                    <p>{{ front }}</p>
+                    <h5>{{ back }}</h5>
+                </div>
+            </div>
+        </div>
+        {% if loop.index0 % 2 == 1 or loop.last%}
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
+    <script>
+        // Adjusts height of the flashcard so both front and back are properly placed inside the flashcard
+        function adjustFlashcardHeight(flashcard) {
+            const front = flashcard.querySelector('.front');
+            const back = flashcard.querySelector('.back');
+
+            back.style.display = 'block';
+            back.style.position = 'absolute';
+            back.style.visibility = 'hidden';
+
+            flashcard.style.height = 'auto';
+            front.style.height = 'auto';
+            back.style.height = 'auto';
+
+            const maxHeight = Math.max(front.scrollHeight, back.scrollHeight);
+            flashcard.style.height = `${maxHeight}px`;
+
+            back.style.display = '';
+            back.style.position = '';
+            back.style.visibility = '';
+
+            front.style.height = `${maxHeight}px`;
+            back.style.height = `${maxHeight}px`;
+        }
+
+    const flashcards = document.querySelectorAll('.flashcard');
+
+    flashcards.forEach(adjustFlashcardHeight);
+
+    window.addEventListener('resize', function() {
+        flashcards.forEach(adjustFlashcardHeight);
+    });
+
+    flashcards.forEach(flashcard => {
+        flashcard.addEventListener('click', function() {
+            flashcard.classList.toggle('flipped');
+        });
+    });
+
+    // Shares or copies the URL to Clipboard
+    document.getElementById('share-button').addEventListener('click', () => {
+        if (navigator.share) {
+            navigator.share({
+                title: document.title,
+                text: "Check out this deck!",
+                url: window.location.href
+            })
+        } 
+        else {
+            const url = window.location.href;
+            navigator.clipboard.writeText(url).then(() => {
+                    alert('URL copied to clipboard!');
+                });
+        }
+    });
+    </script>
+{% endblock %}

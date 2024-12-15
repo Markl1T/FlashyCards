@@ -1,0 +1,79 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Create
+{% endblock %}
+
+{% block main %}
+    <div class="container">
+        <form action="{{ url_for('create') }}" method="post">
+            <div class="container">
+                <div class="left-right">
+                    <h1 class="py-4">Create a Deck</h1>
+                    <button id="save-btn" type="submit" class="mb-2 save button">Save</button>
+                </div>
+                <input type="hidden" id="nrOfFlashcards" name="nrOfFlashcards" value="2">
+                <input class="mb-2 form-control" autocomplete="off" type="text" required name="name" placeholder="Name">
+                <textarea class="mb-2 form-control" autocomplete="off" type="text" name="description" placeholder="Description (Optional)" rows="3"></textarea>
+                <p><strong>Notes:</strong></p> 
+                <ul>
+                    <li>The Deck must have a unique name.</li>
+                    <li>The Deck must have at least 1 Flashcard.</li>
+                    <li>Every Flashcard must have a Front and a Back.</li>
+                </ul>
+            </div>
+            <div id="flashcardContainer" class="container py-2">
+                <div class="row">
+                    <div class="col-md text-center">
+                        <div class="flashcard0">
+                            <label for="front_1">Front</label>
+                            <textarea class="mb-2 form-control" autocomplete="off" type="text" id="front_1" name="front_1" placeholder="Front" rows="3"></textarea>
+                            <label for="back_1">Back</label>
+                            <textarea class="mb-2 form-control" autocomplete="off" type="text" id="back_1" name="back_1" placeholder="Back" rows="4"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md text-center">
+                        <div class="flashcard0">
+                            <label for="front_2">Front</label>
+                            <textarea class="mb-2 form-control" autocomplete="off" type="text" id="front_2" name="front_2" placeholder="Front" rows="3"></textarea>
+                            <label for="back_2">Back</label>
+                            <textarea class="mb-2 form-control" autocomplete="off" type="text" id="back_2" name="back_2" placeholder="Back" rows="4"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-3 container text-center">
+                <button type="button" id="addFlashcard" class="button create"><h1>+</h1></button>
+            </div>
+        </form>
+    </div>
+    <script>
+        let nrOfFlashcards = document.getElementById("nrOfFlashcards");
+        const addFlashcard = document.getElementById("addFlashcard");
+        let i = 3;
+        // Create a row with two flashcards when the button is clicked
+        addFlashcard.addEventListener("click", function() {
+            const flashcards = document.createElement("div");
+            flashcards.className = "row";
+            flashcards.innerHTML +=`<div class="col-md text-center">
+                                        <div class="flashcard0">
+                                            <label for="front_${i}">Front</label>
+                                            <textarea class="mb-2 form-control" autocomplete="off" type="text" id="front_${i}" name="front_${i}" placeholder="Front" rows="3"></textarea>
+                                            <label for="back_${i}">Back</label>
+                                            <textarea class="mb-2 form-control" autocomplete="off" type="text" id="back_${i}" name="back_${i}" placeholder="Back" rows="4"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-md text-center">
+                                        <div class="flashcard0">
+                                            <label for="front_${i+1}">Front</label>
+                                            <textarea class="mb-2 form-control" autocomplete="off" type="text" id="front_${i+1}" name="front_${i+1}" placeholder="Front" rows="3"></textarea>
+                                            <label for="back_${i+1}">Back</label>
+                                            <textarea class="mb-2 form-control" autocomplete="off" type="text" id="back_${i+1}" name="back_${i+1}" placeholder="Back" rows="4"></textarea>
+                                        </div>
+                                    </div>`;
+            i+=2;
+            nrOfFlashcards.value = i;
+            document.getElementById("flashcardContainer").appendChild(flashcards);
+        });
+    </script>
+{% endblock %}

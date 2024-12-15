@@ -1,0 +1,76 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Decks
+{% endblock %}
+
+{% block main %}
+    <form id="delete_deck" action="{{ url_for('delete_deck') }}" method="post"></form>
+    <div class="container pb-5">
+        <h1 class="pt-4">Decks</h1>
+        <div class="text-center">
+            <a href="{{ url_for('create') }}">
+                <button type="button" class="button create"><h1>+</h1></button>
+            </a>
+        </div>
+    </div>
+    {% if rows %}
+        {% for row in rows %}
+            {% if loop.index0 % 2 == 0 %}
+                <div class="container">
+                    <div class="row">
+            {% endif %}
+            <div class="col-md text-center">
+                <div class="flashcard0">
+                    <a href = "{{ url_for('flashcards', username=username, deck_name=row[1]) }}" class="a">
+                        <h1>{{ row[1] }}</h1>
+                        <p>{{ row[2] }}</p>
+                    </a>
+                    <a href="{{ url_for('edit', username=username, deck_name=row[1]) }}">
+                    <button type="button" class="edit button small-button">
+                        <i class="fa-solid fa-pen mb-2"></i>
+                    </button></a>
+                    <button id="delete_{{ row[0] }}" type="button" class="button delete small-button" data-deck-name="{{ row[1] }}" onclick="openConfirmation(this.id, this.getAttribute('data-deck-name'))">
+                        <i class="fa-solid fa-trash mb-2"></i>
+                    </button>
+                </div>
+            </div>
+            {% if loop.index0 % 2 == 1 or loop.last%}
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+        <dialog class="confirmation text-center">
+            <p>Are you sure you want to delete the deck <strong><span class="deck-name"></span></strong>?</p>
+            <button type="button" class="button close" onclick="closeConfirmation()">Close</button>
+            <input type="hidden" form="delete_deck" name="confirmation">
+            <button type="submit" class="button delete" form="delete_deck">Delete</button>
+        </dialog>
+    {% else %}
+    <h4 class="text-center">You do not have any decks. <a href="{{ url_for('create') }}">Create a deck.</a></h4>
+    {% endif %}
+    <script>
+        const confirmation = document.querySelector('.confirmation');
+        // Displays confirmation dialog for deletion of a deck
+        function openConfirmation(deck_id, deck_name) { 
+            let id = deck_id;
+            id = id.split("_")[1];
+            document.querySelector('.confirmation input[name="confirmation"]').value = id;
+            document.querySelector('.confirmation .deck-name').innerText = deck_name;
+            confirmation.showModal();
+        }
+
+        // Closes confirmation dialog for deletion of a deck
+        function closeConfirmation() {
+            const confirmation = document.querySelector(".confirmation");
+            confirmation.close();
+        }
+
+        // Closes confirmation dialog when clicking outside of it
+        addEventListener('click', (event) => { 
+            if (event.target == confirmation) { 
+                confirmation.close(); 
+            }
+        });
+    </script>
+{% endblock %}

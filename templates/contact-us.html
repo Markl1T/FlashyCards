@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Contact Us
+{% endblock %}
+
+{% block main %}
+    <form action="{{ url_for('contact_us') }}" method="post">
+        <div class="log-in container card text-center position-absolute top-50 start-50 translate-middle">
+            <h1 class="mt-3 mb-4">Contact Us</h1>
+            <input class="mb-2 form-control" autocomplete="off" type="text" id="subject" name="subject" placeholder="Subject">
+            <textarea class="mb-2 form-control" autocomplete="off" type="text" id="body" name="body" placeholder="Body" rows="3"></textarea>
+            <button class="my-3 submit button" type="submit">Send</button>
+        </div>
+    </form>
+{% endblock %}

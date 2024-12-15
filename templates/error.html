@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Error
+{% endblock %}
+
+{% block main %}
+    <div class="mt-4 container text-center text-center position-absolute top-50 start-50 translate-middle">
+        <h1 id="error404">404</h1>
+        <h2 id="page-not-found" class="mb-4">Page not found</h2>
+        <a href="{{ url_for('index') }}" id="return-to-homepage">Return to Homepage</a>
+    </div>
+{% endblock %}

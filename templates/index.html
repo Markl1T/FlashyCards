@@ -1,0 +1,123 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block main %}
+    <!-- Get Started -->
+    <header id="get-started" class="text-center py-5">
+        <div class="container">
+            <h1>Welcome to <strong>FlashyCards</strong>!</h1>
+            <p>Your go-to platform for creating, managing, and studying flashcards.</p>
+            {% if current_user.id %}
+                <a href="{{ url_for('create') }}">
+                    <button class="getStarted button">Get Started</button>
+                </a>
+            {% else %}
+                <a href="{{ url_for('register') }}">
+                    <button class="getStarted button">Get Started</button>
+                </a>
+            {% endif %}
+        </div>
+    </header>
+    <!-- Features -->
+    <section id="features" class="px-3 py-5">
+        <div class="container">
+            <h2 class="text-center mb-4"><strong>Features</strong></h2>
+            <div class="row">
+                <div class="col-md text-center">
+                    <i class="fa-solid fa-book fa-2x mb-2"></i>
+                    <h4>Create Flashcard Decks</h4>
+                    <p>Easily organize topics by creating custom decks.</p>
+                </div>
+                <div class="col-md text-center">
+                    <i class="fa-solid fa-mobile-alt fa-2x mb-2"></i>
+                    <h4>Study Anywhere</h4>
+                    <p>Review your flashcards anytime, anywhere from any device.</p>
+                </div>
+                <div class="col-md text-center">
+                    <i class="fa-solid fa-edit fa-2x mb-2"></i>
+                    <h4>Simple Flashcard Management</h4>
+                    <p>Add, edit and delete flashcards with ease.</p>
+                </div>
+                <div class="col-md text-center">
+                    <i class="fa-solid fa-share fa-2x mb-2"></i>
+                    <h4>Share Your Decks</h4>
+                    <p>Easily share your decks with friends, making learning a collaborative experience.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- How It Works -->
+    <section id="how-it-works" class="px-3 py-5">
+        <div class="container">
+            <h2 class="text-center mb-4"><strong>How It Works</strong></h2>
+            <div class="row">
+                <div class="col-md text-center">
+                    <i class="fa-solid fa-user fa-2x mb-2"></i>
+                    <h4>1. Register with an Account</h4>
+                    <p>Create an account to start building your flashcards.</p>
+                </div>
+                <div class="col-md text-center">
+                    <i class="fa-solid fa-folder fa-2x mb-2"></i>
+                    <h4>2. Create Decks</h4>
+                    <p>Organize your study materials by creating decks of flashcards for different topics.</p>
+                </div>
+                <div class="col-md text-center">
+                    <i class="fa-solid fa-plus fa-2x mb-2"></i>
+                    <h4>3. Add Flashcards</h4>
+                    <p>For each deck, add flashcards with questions on the front and answers on the back.</p>
+                </div>
+                <div class="col-md text-center">
+                    <i class="fa-solid fa-graduation-cap fa-2x mb-2"></i>
+                    <h4>4. Study Mode</h4>
+                    <p>Review your flashcards by flipping them over and testing your knowledge.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- How FlashyCards Helps You Succeed-->
+    <section id="how-flashycards-helps-you-succeed" class="px-3 py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md">
+                    <h2 class="mb-4"><strong>How FlashyCards Helps You Succeed</strong></h2>
+                    <ul>
+                        <li><i class="fas fa-bolt"></i> Boost memory retention with active recall.</li>
+                        <li><i class="fas fa-brain"></i> Focus on the topics that matter most to you.</li>
+                        <li><i class="fas fa-calendar-check"></i> Study on your own schedule, anytime, anywhere.</li>
+                    </ul>
+                </div>
+                <div class="col-md">
+                    {% if current_user.id %}
+                        <a href="{{ url_for('create')}}" class="a">
+                            <div class="flashcard0">
+                                <h1>Ready to start learning with FlashyCards?</h1>
+                                <p>Click here</p>
+                            </div>
+                        </a>
+                    {% else %}
+                        <a href="{{ url_for('register')}}" class="a">
+                            <div class="flashcard0">
+                                <h1>Ready to start learning with FlashyCards?</h1>
+                                <p>Click here</p>
+                            </div>
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Contact Us -->
+    <section id="contact-us" class="px-3 py-5">
+        <div class="container">
+            <h2><strong>Contact Us</strong></h2>
+            <p>Have questions or feedback? We'd love to hear from you!</p>
+            <a href="{{ url_for('contact_us') }}" class="button a"><i class="fas fa-envelope"></i> Get in Touch</a>
+        </div>
+    </section>
+    <footer class="text-center pt-3">
+        <p>© 2024 FlashyCards. All rights reserved.</p>
+    </footer>
+{% endblock %}

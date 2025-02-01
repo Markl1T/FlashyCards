@@ -1,10 +1,12 @@
-![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 # **FlashyCards - A Flashcards Learning App**
 **FlashyCards** is a web application designed for students, educators, and anyone who wants to learn or memorize information using flashcards. It offers a user-friendly interface to create, manage, and interact with flashcards, making studying both productive and engaging.
 
 Key features include the ability to add, edit, and delete flashcards dynamically, responsive layouts for use on any device. The application ensures data consistency and allows users to share and manage their flashcards effectively.
 
 With this application, users can focus more on learning and less on organizing their study material.
+
+![Homepage](static/screenshots/homepage.png)
 
 ## Table of Contents
 - [Features](#features)
@@ -25,6 +27,12 @@ With this application, users can focus more on learning and less on organizing t
 - **Review Flashcards**: Flip through the flashcards in a selected deck to study and test your knowledge.
 
 ## Technologies Used
+
+![Python](https://img.shields.io/badge/Python-3.10-blue)
+![Flask](https://img.shields.io/badge/Flask-2.2-lightgrey)
+![SQLite](https://img.shields.io/badge/Database-SQLite-blue)
+![Bootstrap](https://img.shields.io/badge/Bootstrap-5-purple)
+
 - **Frontend**: HTML, CSS, JavaScript
 - **Backend**: Flask, Python
 - **Database**: SQLite3
@@ -41,22 +49,31 @@ Here is a breakdown of the main files in this project:
 - `README.md` : This file, explaining the project and how to use it.
 
 ## Installation
-1. Clone the Repository
+### 1. Install Python
+Ensure you have Python installed on your system. This project requires **Python 3.7 or later**.  
+To check if Python is installed, run:
+```bash
+python --version
+```
+If Python is not installed, [download it here](https://www.python.org/downloads/) and follow the installation instructions.
+### 2. Clone the Repository
 ```bash
 git clone https://github.com/Markl1T/FlashyCards.git
 cd flashycards
 ```
-2. Set up a Virtual Environment
+### 3. Set up a Virtual Environment
 ```bash
 python -m venv venv  
+```
+```bash
 source venv/bin/activate  # On macOS/Linux  
 venv\Scripts\activate     # On Windows
 ```
-3. Install Dependencies
+### 4. Install Dependencies
 ```bash
 pip install -r requirements.txt
 ```
-4. Run the Application
+### 5. Run the Application
 ```bash
 flask run
 ```
@@ -67,33 +84,50 @@ The app will be accessible at http://127.0.0.1:5000/ in your browser.
 1. Navigate to the **Register** page
 2. Fill out the required information such as the username, email and password
 3. Click the **Register** button to create you account
+
+![Register](static/screenshots/register.png)
+
 ### Log Into Your Account
 1. Navigate to the **Log In** page
 2. Enter your username/email and password
 3. Click the **Log In** button to access your account
+
+![Log In](static/screenshots/log-in.png)
+
 ### Create a Deck
 1. Navigate to the **Create** page
 2. Enter a name for your deck
 3. Fill the flashcards with questions on the front and answers on the back
 4. Click the **+** button to add more flashcards
 5. Click the **Save** button to save the deck to your account
+
+![Create a Deck](static/screenshots/create-a-deck.png)
+
 ### Edit a Deck
 1. Navigate to the **Decks** page
 2. Locate the deck you want to edit
 3. Click the **Edit** button (light blue button with a pencil icon)
 4. Update the deck name or modify the flashcards as needed
 5. Click the **Save** button to apply the changes
+
+![Edit](static/screenshots/edit.png)
+
 ### Delete a Deck
 1. Navigate to the **Decks** page
 2. Locate the deck you want to delete
 3. Click the **Delete** button (red button with a trash icon)
 4. A dialog box will appear, asking, "*Are you sure you want to delete this deck?*"
 5. Click **Delete** button in the dialog box to confirm
+
+![Delete](static/screenshots/delete.png)
+
 ### Review Flashcards
 1. Navigate to the **Decks** page
 2. Select the deck you want to review
 3. Browse through the flashcards in the deck, which will display the questions first
 4. Click on a card to flip it and reveal its answer
+
+![Review](static/screenshots/review.png)
 
 ## Challenges and Solutions
 ### 1. Flashcard Height

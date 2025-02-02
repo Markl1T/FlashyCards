@@ -11,6 +11,9 @@
         <button id="share-button" class="button">
             <i class="fa fa-copy"></i> Share the Deck
         </button>
+        <button id="flip-all-button" class="button">
+            <i class="fas fa-redo"></i> Flip All
+        </button>
     </div>
     {% for front, back in flashcards %}
         {% if loop.index0 % 2 == 0 %}
@@ -72,7 +75,13 @@
         });
     });
 
-    // Shares or copies the URL to Clipboard
+    const flipAllButton = document.querySelector('#flip-all-button');
+    flipAllButton.addEventListener('click', function() {
+        flashcards.forEach(flashcard => {
+            flashcard.classList.toggle('flipped');
+        });
+    });
+
     document.getElementById('share-button').addEventListener('click', () => {
         if (navigator.share) {
             navigator.share({

@@ -57,7 +57,7 @@ nav {
     font-size: 1.25rem;
 }
 
-.create:hover, .getStarted:hover, .save:hover, .submit:hover {
+.create:hover, .getStarted:hover, .save:hover, .submit:hover, .search:hover {
     transform: scale(1.1);
 }
 
@@ -132,7 +132,7 @@ nav {
     width: 5rem;
 }
 
-.create:hover, #save-btn:hover {
+.create:hover, #save-btn:hover, .search:hover {
     background-color: #F26101;
     color: #FFFFFF;
 }
@@ -167,9 +167,10 @@ dialog {
 
 .left-right {
     position: relative;
+    padding-right: 25%;
 }
 
-#save-btn {
+#save-btn, .search {
     position: absolute;
     top: 20px;
     right: 0;

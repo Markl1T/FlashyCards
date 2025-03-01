@@ -92,7 +92,7 @@ def register():
                             VALUES (?, ?, ?, DATETIME('now'), DATETIME('now'))""", (email, username, generate_password_hash(password)))
                 conn.commit()
                 flash("You are registered.", "success")
-                return redirect(url_for("index"))
+                return redirect(url_for("login"))
             except sqlite3.IntegrityError:
                 flash("You already have an account or the username is taken.", "warning")
                 return render_template("register.html")
@@ -185,6 +185,23 @@ def decks():
                                 WHERE user_id = ?""", (current_user.id,))
         deck_rows = deck_rows.fetchall()
         return render_template("decks.html", rows = deck_rows, username = current_user.username)
+
+
+@app.route("/decks/search", methods=["GET"])
+@login_required
+def search():
+    searched_deck_name = request.args.get("deck_name")
+    if searched_deck_name:
+        searched_deck_name = f"%{searched_deck_name}%"
+    else:
+        searched_deck_name = "%"
+    with sqlite3.connect(db_path) as conn:
+        cur = conn.cursor()
+        deck_rows = cur.execute("""SELECT deck_id, deck_name, description 
+                                FROM decks
+                                WHERE user_id = ? AND deck_name LIKE ?""", (current_user.id, searched_deck_name))
+        deck_rows = deck_rows.fetchall()
+        return render_template("search.html", rows = deck_rows, username = current_user.username, searched_deck_name = request.args.get("deck_name"))
 
 
 @app.route("/decks/<username>/<deck_name>/edit", methods=["GET", "POST"])

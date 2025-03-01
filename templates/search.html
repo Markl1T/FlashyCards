@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Decks
+    Search results
 {% endblock %}
 
 {% block main %}
@@ -9,7 +9,7 @@
     <div class="container pb-5">
         <form id="search" action="{{ url_for('search') }}" method="get">
             <div class="left-right pb-2">
-                <h1 class="pt-4">Decks</h1>
+                <h1 class="pt-4 mx-2">Search results for "{{ searched_deck_name }}"</h1>
                 <button type="submit" class="search button">Search</button>
             </div>
             <input class="mb-2 form-control" type="text" name="deck_name" placeholder="Search" id="search-deck">
@@ -53,7 +53,7 @@
             <button type="submit" class="button delete" form="delete_deck">Delete</button>
         </dialog>
     {% else %}
-    <h4 class="text-center">You do not have any decks. <a href="{{ url_for('create') }}">Create a deck.</a></h4>
+    <h4 class="text-center">You do not have any decks with a name containing "{{ searched_deck_name }}". <a href="{{ url_for('create') }}">Create a deck.</a></h4>
     {% endif %}
     <script>
         const confirmation = document.querySelector('.confirmation');

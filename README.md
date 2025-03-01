@@ -1,5 +1,10 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 # **FlashyCards - A Flashcards Learning App**
+
+<div style="text-align: center">
+  <img src="static/images/FlashyCardsLogo.png" alt="FlashyCards" width="50%"/>
+</div>
+
 **FlashyCards** is a web application designed for students, educators, and anyone who wants to learn or memorize information using flashcards. It offers a user-friendly interface to create, manage, and interact with flashcards, making studying both productive and engaging.
 
 Key features include the ability to add, edit, and delete flashcards dynamically, responsive layouts for use on any device. The application ensures data consistency and allows users to share and manage their flashcards effectively.
@@ -142,11 +147,10 @@ The app will be accessible at http://127.0.0.1:5000/ in your browser.
 
 ## Future Improvements
 1. Email Verification
-2. Search Functionality for Decks
-3. Statistics & Progress Tracking
-4. Theme Customization
-5. Spaced Repetition System
-6. Badges & Achievements
+2. Statistics & Progress Tracking
+3. Theme Customization
+4. Spaced Repetition System
+5. Badges & Achievements
 
 ## License
 This project is licensed under the [MIT License](LICENSE).
